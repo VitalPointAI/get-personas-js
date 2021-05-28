@@ -73,12 +73,11 @@ class Persona {
         const profile = this.getAlias(APP_OWNER_ACCOUNT, 'profile', contract)
         
         const done = await Promise.all([
-        appDid, 
-        profile, 
+        profile
         ])
         
         let rootAliases = {
-        profile: done[1]
+        profile: done[0]
         }
 
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
