@@ -1,7 +1,7 @@
 // testnet / default
 let config = {
     APP_OWNER_ACCOUNT: 'vitalpointai.testnet',
-    CERAMIC_API_URL: 'https://gateway-clay.ceramic.network',
+    CERAMIC_API_URL: 'https://ceramic-clay.3boxlabs.com',
     networkId: 'testnet',
     nodeUrl: 'https://rpc.testnet.near.org',
     walletUrl: 'https://wallet.testnet.near.org',
