@@ -18,7 +18,7 @@ export const {
 class Persona {
 
     async getAppCeramic() {
-        const ceramic = new CeramicClient(CERAMIC_API_URL, {autopin: false, docSyncEnabled: false, docSynchInterval: 30000})
+        const ceramic = new CeramicClient(CERAMIC_API_URL, {docSyncEnabled: false, docSynchInterval: 30000})
         return ceramic
     }
 
@@ -80,7 +80,7 @@ class Persona {
         profile: done[0]
         }
 
-        const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
+        const appIdx = new IDX({ ceramic: appClient, autopin: false, aliases: rootAliases})
     
         return appIdx
     }
