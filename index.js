@@ -85,6 +85,18 @@ class Persona {
         return appIdx
     }
 
+    async getPersona(accountId) {
+        let contract = await this.initiateDidRegistryContract(accountId)
+        let idx = await this.getAppIdx(contract)
+        let did = await this.getDID(accountId, contract)
+        let persona = await idx.get('profile', did)
+        if(persona){
+            return persona
+        } else {
+            return false
+        }
+    }
+
 }
 
 module.exports = Persona
