@@ -2,12 +2,7 @@ import CeramicClient from '@ceramicnetwork/http-client'
 import * as nearApiJs from 'near-api-js'
 import { IDX } from '@ceramicstudio/idx'
 
-// schemas
-import { profileSchema } from './schemas/profile'
-
 import { config } from './config'
-
-const axios = require('axios').default
 
 export const {
     APP_OWNER_ACCOUNT,
