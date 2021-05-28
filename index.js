@@ -25,7 +25,7 @@ class Persona {
     async initiateDidRegistryContract(accountId) {    
         
         const near = await nearApiJs.connect({
-            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore() },
+            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
         })
 
         const account = new nearApiJs.Account(near.connection, accountId)
