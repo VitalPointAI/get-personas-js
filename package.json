@@ -1,6 +1,6 @@
 {
   "name": "@aluhning/get-personas-js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Utility for retrieving persona data created with Catalyst from Ceramic Network",
   "main": "index.js",
   "author": "Aaron Luhning",
@@ -21,5 +21,5 @@
   "scripts": {
     "clean": "rimraf ./dist && rimraf .parcel-cache",
     "start": "npm run clean && parcel src/index.html --no-source-maps"
-}
+  }
 }
