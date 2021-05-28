@@ -1,0 +1,25 @@
+{
+  "name": "@aluhning/get-personas-js",
+  "version": "1.0.0",
+  "description": "Utility for retrieving persona data created with Catalyst from Ceramic Network",
+  "main": "index.js",
+  "author": "Aaron Luhning",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VitalPointAI/get-personas-js.git"
+  },
+  "dependencies": {
+    "@ceramicnetwork/http-client": "^1.0.3",
+    "@ceramicstudio/idx": "^0.12.0",
+    "near-api-js": "^0.41.0"
+  },
+  "devDependencies": {
+    "parcel": "^2.0.0-beta.2",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "clean": "rimraf ./dist && rimraf .parcel-cache",
+    "start": "npm run clean && parcel src/index.html --no-source-maps"
+}
+}
