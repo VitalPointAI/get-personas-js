@@ -93,6 +93,7 @@ class Persona {
         let idx = await this.getAppIdx(contract)
         console.log('idx', idx)
         let did = await this.getDID(accountId, contract)
+        console.log('js did', did)
         let persona = await idx.get('profile', did)
         console.log('persona', persona)
         if(persona){
