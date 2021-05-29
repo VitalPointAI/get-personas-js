@@ -71,13 +71,16 @@ class Persona {
     async getAppIdx(contract){
         const appClient = await this.getAppCeramic()
         const profile = this.getAlias(APP_OWNER_ACCOUNT, 'profile', contract)
-        
+        const profile = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
+
         const done = await Promise.all([
-        profile
+        profile,
+        donations
         ])
         
         let rootAliases = {
-        profile: done[0]
+        profile: done[0],
+        donations: done[1]
         }
 
         const appIdx = new IDX({ ceramic: appClient, autopin: false, aliases: rootAliases})
@@ -92,6 +95,18 @@ class Persona {
         let persona = await idx.get('profile', did)
         if(persona){
             return persona
+        } else {
+            return false
+        }
+    }
+
+    async getDonations(accountId) {
+        let contract = await this.initiateDidRegistryContract(accountId)
+        let idx = await this.getAppIdx(contract)
+        let did = await this.getDID(accountId, contract)
+        let donations = await idx.get('donations', did)
+        if(donations){
+            return donations
         } else {
             return false
         }
