@@ -71,7 +71,7 @@ class Persona {
     async getAppIdx(contract){
         const appClient = await this.getAppCeramic()
         const profile = this.getAlias(APP_OWNER_ACCOUNT, 'profile', contract)
-        const profile = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
+        const donations = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
 
         const done = await Promise.all([
         profile,
