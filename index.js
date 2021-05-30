@@ -85,7 +85,7 @@ class Persona {
         donations: done[1],
         daoProfile: done[2]
         }
-        
+
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
         return appIdx
     }
@@ -103,13 +103,18 @@ class Persona {
     }
 
     async getDao(accountId){
-        let contract = await this.initiateDidRegistryContract(accountId)
-        let idx = await this.getAppIdx(contract)
-        let did = await this.getDID(accountId, contract)
-        let dao = await idx.get('daoProfile', did)
-        if(dao){
-            return dao
-        } else {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let dao = await idx.get('daoProfile', did)
+            if(dao){
+                return dao
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving Dao', err)
             return false
         }
     }
