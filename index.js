@@ -91,11 +91,11 @@ class Persona {
     async getPersona(accountId) {
         let contract = await this.initiateDidRegistryContract(accountId)
         let idx = await this.getAppIdx(contract)
-        console.log('idx', idx)
+       
         let did = await this.getDID(accountId, contract)
-        console.log('js did', did)
+        
         let persona = await idx.get('profile', did)
-        console.log('persona', persona)
+       
         if(persona){
             return persona
         } else {
