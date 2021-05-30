@@ -91,13 +91,18 @@ class Persona {
     }
 
     async getPersona(accountId) {
-        let contract = await this.initiateDidRegistryContract(accountId)
-        let idx = await this.getAppIdx(contract)
-        let did = await this.getDID(accountId, contract)
-        let persona = await idx.get('profile', did)
-        if(persona){
-            return persona
-        } else {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let persona = await idx.get('profile', did)
+            if(persona){
+                return persona
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving Persona', err)
             return false
         }
     }
@@ -120,17 +125,21 @@ class Persona {
     }
 
     async getDonations(accountId) {
-        let contract = await this.initiateDidRegistryContract(accountId)
-        let idx = await this.getAppIdx(contract)
-        let did = await this.getDID(accountId, contract)
-        let donations = await idx.get('donations', did)
-        if(donations){
-            return donations
-        } else {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let donations = await idx.get('donations', did)
+            if(donations){
+                return donations
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving donation', err)
             return false
         }
     }
-
 }
 
 module.exports = Persona
