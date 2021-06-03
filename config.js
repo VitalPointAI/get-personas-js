@@ -8,7 +8,7 @@ let config = {
     walletUrl: 'https://wallet.testnet.near.org',
     nameSuffix: '.testnet',
     contractName: 'testnet',
-    didRegistryContractName: 'dids.vitalpointai.testnet',
+    didRegistryContractName: 'dids1.vitalpointai.testnet',
 }
 
 if (process.env.REACT_APP_ENV === 'prod') {
