@@ -73,17 +73,20 @@ class Persona {
         const profile = this.getAlias(APP_OWNER_ACCOUNT, 'profile', contract)
         const donations = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
         const daoProfile = this.getAlias(APP_OWNER_ACCOUNT, 'daoProfile', contract)
+        const opportunities = this.getAlias(APP_OWNER_ACCOUNT, 'opportunities', contract)
 
         const done = await Promise.all([
         profile,
         donations,
-        daoProfile
+        daoProfile,
+        opportunities
         ])
         
         let rootAliases = {
         profile: done[0],
         donations: done[1],
-        daoProfile: done[2]
+        daoProfile: done[2],
+        opportunities: done[3]
         }
 
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
@@ -137,6 +140,23 @@ class Persona {
             }
         } catch (err) {
             console.log('error retrieving donation', err)
+            return false
+        }
+    }
+
+    async getOpportunities(accountId) {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let opportunities = await idx.get('opportunities', did)
+            if(opportunities){
+                return opportunities
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving opportunities', err)
             return false
         }
     }
