@@ -74,19 +74,25 @@ class Persona {
         const donations = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
         const daoProfile = this.getAlias(APP_OWNER_ACCOUNT, 'daoProfile', contract)
         const opportunities = this.getAlias(APP_OWNER_ACCOUNT, 'opportunities', contract)
+        const memberData = this.getAlias(APP_OWNER_ACCOUNT, 'memberData', contract)
+        const proposalData = this.getAlias(APP_OWNER_ACCOUNT, 'proposalData', contract)
 
         const done = await Promise.all([
         profile,
         donations,
         daoProfile,
-        opportunities
+        opportunities,
+        memberData,
+        proposalData
         ])
         
         let rootAliases = {
         profile: done[0],
         donations: done[1],
         daoProfile: done[2],
-        opportunities: done[3]
+        opportunities: done[3],
+        memberData: done[4],
+        proposalData: done[5]
         }
 
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
