@@ -160,6 +160,42 @@ class Persona {
             return false
         }
     }
+
+    async getMemberStats(accountId) {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let data = await idx.get('memberData', did)
+            if(data){
+                return data
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving member data', err)
+            return false
+        }
+    }
+
+    async getProposalStats(accountId) {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let data = await idx.get('proposalData', did)
+            if(data){
+                return data
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving member data', err)
+            return false
+        }
+    }
+
+
 }
 
 module.exports = Persona
