@@ -76,6 +76,7 @@ class Persona {
         const opportunities = this.getAlias(APP_OWNER_ACCOUNT, 'opportunities', contract)
         const memberData = this.getAlias(APP_OWNER_ACCOUNT, 'memberData', contract)
         const proposalData = this.getAlias(APP_OWNER_ACCOUNT, 'proposalData', contract)
+        const votingData = this.getAliass(APP_OWNER_ACCOUNT, 'votingData', contract)
 
         const done = await Promise.all([
         profile,
@@ -83,7 +84,8 @@ class Persona {
         daoProfile,
         opportunities,
         memberData,
-        proposalData
+        proposalData,
+        votingData
         ])
         
         let rootAliases = {
@@ -92,7 +94,8 @@ class Persona {
         daoProfile: done[2],
         opportunities: done[3],
         memberData: done[4],
-        proposalData: done[5]
+        proposalData: done[5],
+        votingData: done[6]
         }
 
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
@@ -197,6 +200,23 @@ class Persona {
             }
         } catch (err) {
             console.log('error retrieving member data', err)
+            return false
+        }
+    }
+
+    async getVotingStats(accountId) {
+        try{
+            let contract = await this.initiateDidRegistryContract(accountId)
+            let idx = await this.getAppIdx(contract)
+            let did = await this.getDID(accountId, contract)
+            let data = await idx.get('votingData', did)
+            if(data){
+                return data
+            } else {
+                return false
+            }
+        } catch (err) {
+            console.log('error retrieving voting data', err)
             return false
         }
     }
