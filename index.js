@@ -76,7 +76,7 @@ class Persona {
         const opportunities = this.getAlias(APP_OWNER_ACCOUNT, 'opportunities', contract)
         const memberData = this.getAlias(APP_OWNER_ACCOUNT, 'memberData', contract)
         const proposalData = this.getAlias(APP_OWNER_ACCOUNT, 'proposalData', contract)
-        const votingData = this.getAliass(APP_OWNER_ACCOUNT, 'votingData', contract)
+        const votingData = this.getAlias(APP_OWNER_ACCOUNT, 'votingData', contract)
 
         const done = await Promise.all([
         profile,
