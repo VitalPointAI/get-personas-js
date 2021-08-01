@@ -10,9 +10,9 @@
     "url": "https://github.com/VitalPointAI/get-personas-js.git"
   },
   "dependencies": {
-    "@ceramicnetwork/http-client": "^1.0.6",
+    "@ceramicnetwork/http-client": "^1.0.7",
     "@ceramicstudio/idx": "^0.12.1",
-    "near-api-js": "^0.41.0"
+    "near-api-js": "^0.42.0"
   },
   "devDependencies": {
     "parcel": "^2.0.0-beta.2",
