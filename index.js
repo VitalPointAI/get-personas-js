@@ -1,8 +1,18 @@
 import CeramicClient from '@ceramicnetwork/http-client'
+import KeyDidResolver from 'key-did-resolver'
+import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
+import { DID } from 'dids'
 import * as nearApiJs from 'near-api-js'
 import { IDX } from '@ceramicstudio/idx'
 
 import { config } from './config'
+
+const resolver = {
+    ...KeyDidResolver.getResolver(),
+    ...ThreeIdResolver.getResolver(ceramic),
+  }
+
+const did = new DID({ resolver })
 
 export const {
     APP_OWNER_ACCOUNT,
@@ -19,6 +29,7 @@ class Persona {
 
     async getAppCeramic() {
         const ceramic = new CeramicClient(CERAMIC_API_URL)
+        ceramic.did = did
         return ceramic
     }
 
