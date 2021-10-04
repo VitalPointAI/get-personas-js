@@ -7,6 +7,8 @@ import { IDX } from '@ceramicstudio/idx'
 
 import { config } from './config'
 
+console.log('env: ', process.env.ENV)
+
 export const {
     APP_OWNER_ACCOUNT,
     CERAMIC_API_URL,

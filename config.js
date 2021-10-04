@@ -1,4 +1,4 @@
-// testnet / default
+// // testnet / default
 let config = {
     APP_OWNER_ACCOUNT: 'vitalpointai.testnet',
     CERAMIC_API_URL: 'https://ceramic-node.vitalpointai.com',
