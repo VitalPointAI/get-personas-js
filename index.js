@@ -7,13 +7,6 @@ import { IDX } from '@ceramicstudio/idx'
 
 import { config } from './config'
 
-const resolver = {
-    ...KeyDidResolver.getResolver(),
-    ...ThreeIdResolver.getResolver(ceramic),
-  }
-
-const did = new DID({ resolver })
-
 export const {
     APP_OWNER_ACCOUNT,
     CERAMIC_API_URL,
@@ -29,6 +22,11 @@ class Persona {
 
     async getAppCeramic() {
         const ceramic = new CeramicClient(CERAMIC_API_URL)
+        const resolver = {
+            ...KeyDidResolver.getResolver(),
+            ...ThreeIdResolver.getResolver(ceramic),
+          }
+        const did = new DID({ resolver })
         ceramic.did = did
         return ceramic
     }
