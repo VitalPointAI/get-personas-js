@@ -1,9 +1,12 @@
 import CeramicClient from '@ceramicnetwork/http-client'
 import KeyDidResolver from 'key-did-resolver'
 import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
+import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { DID } from 'dids'
 import * as nearApiJs from 'near-api-js'
 import { IDX } from '@ceramicstudio/idx'
+import { randomBytes } from '@stablelib/random'
+
 
 import { config } from './config'
 
@@ -18,6 +21,8 @@ export const {
     didRegistryContractName
 } = config
 
+const seed = randomBytes(32)
+
 class Persona {
 
     async getAppCeramic() {
@@ -27,7 +32,10 @@ class Persona {
             ...ThreeIdResolver.getResolver(ceramic),
           }
         const did = new DID({ resolver })
-        ceramic.did = did
+        ceramic.setDID(did)
+        const provider = new Ed25519Provider(seed)
+        ceramic.did.setProvider(provider)
+        await ceramic.did.authenticate()
         return ceramic
     }
 
