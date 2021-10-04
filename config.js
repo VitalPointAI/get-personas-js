@@ -12,7 +12,6 @@
 
 //if (process.env.ENV === 'prod') {
 let config = {
-        ...config,
         APP_OWNER_ACCOUNT: 'vitalpointai.near',
         CERAMIC_API_URL: 'https://ceramic-node.vitalpointai.com',
         networkId: 'mainnet',
