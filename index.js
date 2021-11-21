@@ -81,14 +81,14 @@ class Persona {
     }
 
     
-    async getDID(accountId, appIdx, near){
+    async getDID(accountId, idx, near){
         if(!near){
             near = await this.getNEAR()
         }
        
         let nearAuthProvider = new NearAuthProvider(near, accountId, near.connection.networkId)
         let insideAccountId = await nearAuthProvider.accountId()
-        let insideAccountLink = await Caip10Link.fromAccount(appIdx.ceramic, insideAccountId)
+        let insideAccountLink = await Caip10Link.fromAccount(idx.ceramic, insideAccountId)
         
         // backup check for legacy contract DID registrations
         if(!insideAccountLink.did){   
@@ -142,14 +142,12 @@ class Persona {
     }
 
 
-    async getData(accountId, alias, appIdx){
+    async getData(accountId, alias, idx){
        
         try{
             let contract = await this.initiateDidRegistryContract(accountId)
-            if(!appIdx){
+            if(!idx){
                 idx = this.getAppIdx(contract)
-            } else {
-                idx = appIdx
             }
             let did = await this.getDID(accountId, idx)
             let data = await idx.get(alias, did)
