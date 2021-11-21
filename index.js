@@ -142,7 +142,7 @@ class Persona {
     }
 
 
-    async getData(accountId, alias, idx){
+    async getData(alias, accountId, idx){
        
         try{
             let contract = await this.initiateDidRegistryContract(accountId)
