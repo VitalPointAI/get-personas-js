@@ -1,12 +1,13 @@
 import CeramicClient from '@ceramicnetwork/http-client'
 import KeyDidResolver from 'key-did-resolver'
 import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
+import { Caip10Link } from '@ceramicnetwork/stream-caip10-link'
+import { NearAuthProvider } from '@ceramicnetwork/blockchain-utils-linking'
 import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { DID } from 'dids'
 import * as nearApiJs from 'near-api-js'
 import { IDX } from '@ceramicstudio/idx'
 import { randomBytes } from '@stablelib/random'
-
 
 import { config } from './config'
 
@@ -22,6 +23,10 @@ export const {
 } = config
 
 const seed = randomBytes(32)
+
+const near = await nearApiJs.connect({
+    networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
+})
 
 class Persona {
 
@@ -41,10 +46,6 @@ class Persona {
 
     async initiateDidRegistryContract(accountId) {    
         
-        const near = await nearApiJs.connect({
-            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
-        })
-
         const account = new nearApiJs.Account(near.connection, accountId)
 
         // initiate the contract so its associated with this current account and exposing all the view methods
@@ -59,6 +60,7 @@ class Persona {
         return didRegistryContract
     }
 
+
     async getAlias(accountId, aliasName, contract) {
         try {
         let aliasExists = await contract.hasAlias({alias: accountId+':'+aliasName})
@@ -72,18 +74,29 @@ class Persona {
         }
     }
 
-    async getDID(accountId, contract) {
-        try{
-            let didExists = await contract.hasDID({accountId: accountId})
-            if(didExists){
-                let did = await contract.getDID({accountId: accountId})
-                return did
+    
+    async getDID(accountId, appIdx){
+       
+        let nearAuthProvider = new NearAuthProvider(near, accountId, near.connection.networkId)
+        let insideAccountId = await nearAuthProvider.accountId()
+        let insideAccountLink = await Caip10Link.fromAccount(appIdx.ceramic, insideAccountId)
+        
+        // backup check for legacy contract DID registrations
+        if(!insideAccountLink.did){   
+            try{
+                let didExists = await contract.hasDID({accountId: accountId})
+                if(didExists){
+                    let did = await contract.getDID({accountId: accountId})
+                    return did
+                }
+            } catch (err) {
+                console.log('problem retrieving did', err)
+                return false
             }
-        } catch (err) {
-            console.log('problem retrieving did', err)
-            return false
         }
+        return insideAccountLink.did
     }
+
 
     async getAppIdx(contract){
         const appClient = await this.getAppCeramic()
@@ -119,126 +132,23 @@ class Persona {
         return appIdx
     }
 
-    async getPersona(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let persona = await idx.get('profile', did)
-            if(persona){
-                return persona
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving Persona', err)
-            return false
-        }
-    }
 
-    async getDao(accountId){
+    async getData(accountId, alias){
         try{
             let contract = await this.initiateDidRegistryContract(accountId)
             let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let dao = await idx.get('daoProfile', did)
-            if(dao){
-                return dao
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving Dao', err)
-            return false
-        }
-    }
-
-    async getDonations(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let donations = await idx.get('donations', did)
-            if(donations){
-                return donations
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving donation', err)
-            return false
-        }
-    }
-
-    async getOpportunities(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let opportunities = await idx.get('opportunities', did)
-            if(opportunities){
-                return opportunities
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving opportunities', err)
-            return false
-        }
-    }
-
-    async getMemberStats(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let data = await idx.get('memberData', did)
+            let did = await this.getDID(accountId, idx)
+            let data = await idx.get(alias, did)
             if(data){
                 return data
             } else {
                 return false
             }
         } catch (err) {
-            console.log('error retrieving member data', err)
+            console.log('error retrieving data for:'+alias, err)
             return false
         }
     }
-
-    async getProposalStats(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let data = await idx.get('proposalData', did)
-            if(data){
-                return data
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving member data', err)
-            return false
-        }
-    }
-
-    async getVotingStats(accountId) {
-        try{
-            let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
-            let did = await this.getDID(accountId, contract)
-            let data = await idx.get('votingData', did)
-            if(data){
-                return data
-            } else {
-                return false
-            }
-        } catch (err) {
-            console.log('error retrieving voting data', err)
-            return false
-        }
-    }
-
-
 }
 
 module.exports = Persona

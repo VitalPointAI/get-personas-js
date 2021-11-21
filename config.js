@@ -1,4 +1,4 @@
-// // testnet / default
+// testnet / default
 let config = {
     APP_OWNER_ACCOUNT: 'vitalpointai.testnet',
     CERAMIC_API_URL: 'https://ceramic-node.vitalpointai.com',
@@ -10,8 +10,15 @@ let config = {
     didRegistryContractName: 'dids1.vitalpointai.testnet',
 }
 
+if(process.env.ENV === 'localhost'){
+    config = {
+        ...config
+    }
+}
+
 if (process.env.ENV === 'prod') {
-let config = {
+    config = {
+        ...config,
         APP_OWNER_ACCOUNT: 'aaron.near',
         CERAMIC_API_URL: 'https://ceramic-node.vitalpointai.com',
         networkId: 'mainnet',
