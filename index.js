@@ -24,9 +24,7 @@ export const {
 
 const seed = randomBytes(32)
 
-const near = await nearApiJs.connect({
-    networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
-})
+
 
 class Persona {
 
@@ -45,7 +43,9 @@ class Persona {
     }
 
     async initiateDidRegistryContract(accountId) {    
-        
+        const near = await nearApiJs.connect({
+            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
+        })
         const account = new nearApiJs.Account(near.connection, accountId)
 
         // initiate the contract so its associated with this current account and exposing all the view methods
@@ -76,6 +76,9 @@ class Persona {
 
     
     async getDID(accountId, appIdx){
+        const near = await nearApiJs.connect({
+            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
+        })
        
         let nearAuthProvider = new NearAuthProvider(near, accountId, near.connection.networkId)
         let insideAccountId = await nearAuthProvider.accountId()
