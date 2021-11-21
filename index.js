@@ -24,9 +24,14 @@ export const {
 
 const seed = randomBytes(32)
 
-
-
 class Persona {
+
+    async getNEAR(){
+        const near = await nearApiJs.connect({
+            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
+        })
+        return near
+    }
 
     async getAppCeramic() {
         const ceramic = new CeramicClient(CERAMIC_API_URL)
@@ -42,10 +47,11 @@ class Persona {
         return ceramic
     }
 
-    async initiateDidRegistryContract(accountId) {    
-        const near = await nearApiJs.connect({
-            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
-        })
+    async initiateDidRegistryContract(accountId, near) {    
+       
+        if(!near){
+            near = await this.getNEAR()
+        }
         const account = new nearApiJs.Account(near.connection, accountId)
 
         // initiate the contract so its associated with this current account and exposing all the view methods
@@ -75,10 +81,10 @@ class Persona {
     }
 
     
-    async getDID(accountId, appIdx){
-        const near = await nearApiJs.connect({
-            networkId, nodeUrl, walletUrl, deps: { keyStore: new nearApiJs.keyStores.BrowserLocalStorageKeyStore() },
-        })
+    async getDID(accountId, appIdx, near){
+        if(!near){
+            near = await this.getNEAR()
+        }
        
         let nearAuthProvider = new NearAuthProvider(near, accountId, near.connection.networkId)
         let insideAccountId = await nearAuthProvider.accountId()
@@ -136,10 +142,15 @@ class Persona {
     }
 
 
-    async getData(accountId, alias){
+    async getData(accountId, alias, appIdx){
+       
         try{
             let contract = await this.initiateDidRegistryContract(accountId)
-            let idx = await this.getAppIdx(contract)
+            if(!appIdx){
+                idx = this.getAppIdx(contract)
+            } else {
+                idx = appIdx
+            }
             let did = await this.getDID(accountId, idx)
             let data = await idx.get(alias, did)
             if(data){
