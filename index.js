@@ -18,7 +18,7 @@ export const {
     walletUrl, 
     nameSuffix,
     contractName, 
-    didRegistryContractName,
+    registryContractName,
     factoryContractName,
 } = config
 
@@ -47,7 +47,7 @@ class Persona {
         return ceramic
     }
 
-    async initiateDidRegistryContract(accountId, near) {    
+    async registryContract(accountId, near) {    
        
         if(!near){
             near = await this.getNEAR()
@@ -55,7 +55,7 @@ class Persona {
         const account = new nearApiJs.Account(near.connection, accountId)
 
         // initiate the contract so its associated with this current account and exposing all the view methods
-        let didRegistryContract = new nearApiJs.Contract(account, didRegistryContractName, {
+        let registryContract = new nearApiJs.Contract(account, registryContractName, {
         viewMethods: [
             'getDID',
             'hasDID',
@@ -63,7 +63,7 @@ class Persona {
             'hasAlias'
         ],
     })
-        return didRegistryContract
+        return registryContract
     }
 
     async factoryContract(accountId, near) {    
@@ -166,7 +166,7 @@ class Persona {
     async getData(alias, accountId, idx){
        
         try{
-            let contract = await this.initiateDidRegistryContract(accountId)
+            let contract = await this.registryContract(accountId)
             if(!idx){
                 idx = await this.getAppIdx(contract)
             }

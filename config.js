@@ -8,7 +8,7 @@ let config = {
     nameSuffix: '.testnet',
     contractName: 'testnet',
     factoryContractName: 'factory2.vitalpointai.testnet',
-    didRegistryContractName: 'dids2.vitalpointai.testnet',
+    registryContractName: 'dids2.vitalpointai.testnet',
     GRAPH_FACTORY_API_URL: 'https://api.thegraph.com/subgraphs/name/vitalpointai/catalyst-factory-tnet',
     GRAPH_REGISTRY_API_URL: 'https://api.thegraph.com/subgraphs/name/vitalpointai/registry-near-tnet'
 }
@@ -36,7 +36,7 @@ if (process.env.ENV === 'prod') {
         nameSuffix: '.near',
         contractName: 'near',
         factoryContractName: 'cdao.near',
-        didRegistryContractName: 'did.near',
+        registryContractName: 'did.near',
         GRAPH_FACTORY_API_URL: 'https://api.thegraph.com/subgraphs/name/vitalpointai/catalyst-factory-mnet',
         GRAPH_REGISTRY_API_URL: 'https://api.thegraph.com/subgraphs/name/vitalpointai/registry-near-mnet'
     }
