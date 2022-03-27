@@ -1,4 +1,4 @@
-![NEAR Personas}(https://cdn.vitalpoint.ai/vitalpointai-cdn/2022/03/personas-title.png)
+![NEAR Personas](https://cdn.vitalpoint.ai/vitalpointai-cdn/2022/03/personas-title.png)
 
 ## Integrating NEAR Personas in your App ##
 
