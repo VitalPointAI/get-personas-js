@@ -1,13 +1,12 @@
 import CeramicClient from '@ceramicnetwork/http-client'
 import KeyDidResolver from 'key-did-resolver'
 import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
-import { Caip10Link } from '@ceramicnetwork/stream-caip10-link'
-import { NearAuthProvider } from '@ceramicnetwork/blockchain-utils-linking'
 import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { DID } from 'dids'
 import * as nearApiJs from 'near-api-js'
 import { IDX } from '@ceramicstudio/idx'
 import { randomBytes } from '@stablelib/random'
+import { queries } from './graphQueries'
 
 import { config } from './config'
 
@@ -19,7 +18,8 @@ export const {
     walletUrl, 
     nameSuffix,
     contractName, 
-    didRegistryContractName
+    didRegistryContractName,
+    factoryContractName,
 } = config
 
 const seed = randomBytes(32)
@@ -66,6 +66,22 @@ class Persona {
         return didRegistryContract
     }
 
+    async factoryContract(accountId, near) {    
+       
+        if(!near){
+            near = await this.getNEAR()
+        }
+        const account = new nearApiJs.Account(near.connection, accountId)
+
+        // initiate the contract so its associated with this current account and exposing all the view methods
+        let factoryContract = new nearApiJs.Contract(account, factoryContractName, {
+        viewMethods: [
+            'getDaoByAccount'
+        ],
+    })
+        return factoryContract
+    }
+
 
     async getAlias(accountId, aliasName, contract) {
         try {
@@ -81,60 +97,57 @@ class Persona {
     }
 
     
-    async getDID(accountId, idx, near){
+    async getDID(accountId, near){
+       
+        let dao
+        let did = false
+
+        did = queries.getDid(accountId)
+        if(did){
+            return did
+        }
+
         if(!near){
             near = await this.getNEAR()
         }
-       
-        let nearAuthProvider = new NearAuthProvider(near, accountId, near.connection.networkId)
-        let insideAccountId = await nearAuthProvider.accountId()
-        let insideAccountLink = await Caip10Link.fromAccount(idx.ceramic, insideAccountId)
         
-        // backup check for legacy contract DID registrations
-        if(!insideAccountLink.did){   
-            try{
-                let didExists = await contract.hasDID({accountId: accountId})
-                if(didExists){
-                    let did = await contract.getDID({accountId: accountId})
-                    return did
-                }
-            } catch (err) {
-                console.log('problem retrieving did', err)
-                return false
-            }
+        let factoryContract = await this.factoryContract(accountId, near)
+        let registryContract = await this.registryContract(accountId, near)
+
+        try{
+        did = await registryContract.getDID({accountId: accountId})
+        if(did){
+            return did
         }
-        return insideAccountLink.did
+        } catch (err) {
+        console.log('error retrieving did from legacy', err)
+        }
+    
+        if (!did){
+        try {
+        dao = await factoryContract.getDaoByAccount({accountId: accountId})
+        did = dao.did
+        } catch (err) {
+            console.log('error retrieving did', err)
+        }
+        }
+        return did
     }
 
 
     async getAppIdx(contract){
         const appClient = await this.getAppCeramic()
         const profile = this.getAlias(APP_OWNER_ACCOUNT, 'profile', contract)
-        const donations = this.getAlias(APP_OWNER_ACCOUNT, 'donations', contract)
         const daoProfile = this.getAlias(APP_OWNER_ACCOUNT, 'daoProfile', contract)
-        const opportunities = this.getAlias(APP_OWNER_ACCOUNT, 'opportunities', contract)
-        const memberData = this.getAlias(APP_OWNER_ACCOUNT, 'memberData', contract)
-        const proposalData = this.getAlias(APP_OWNER_ACCOUNT, 'proposalData', contract)
-        const votingData = this.getAlias(APP_OWNER_ACCOUNT, 'votingData', contract)
 
         const done = await Promise.all([
         profile,
-        donations,
-        daoProfile,
-        opportunities,
-        memberData,
-        proposalData,
-        votingData
+        daoProfile
         ])
         
         let rootAliases = {
         profile: done[0],
-        donations: done[1],
         daoProfile: done[2],
-        opportunities: done[3],
-        memberData: done[4],
-        proposalData: done[5],
-        votingData: done[6]
         }
 
         const appIdx = new IDX({ ceramic: appClient, aliases: rootAliases})
@@ -147,7 +160,7 @@ class Persona {
         try{
             let contract = await this.initiateDidRegistryContract(accountId)
             if(!idx){
-                idx = this.getAppIdx(contract)
+                idx = await this.getAppIdx(contract)
             }
             let did = await this.getDID(accountId, idx)
             let data = await idx.get(alias, did)

@@ -1,7 +1,7 @@
 {
   "name": "@aluhning/get-personas-js",
   "version": "1.44.0",
-  "description": "Utility for retrieving persona data created with Catalyst from Ceramic Network",
+  "description": "Utility for retrieving persona data created with NEAR Personas",
   "main": "index.js",
   "author": "Aaron Luhning",
   "license": "ISC",
@@ -10,18 +10,18 @@
     "url": "https://github.com/VitalPointAI/get-personas-js.git"
   },
   "dependencies": {
-    "@ceramicnetwork/3id-did-resolver": "^1.4.9",
-    "@ceramicnetwork/http-client": "^1.5.0",
-    "@ceramicnetwork/blockchain-utils-linking": "^1.5.0",
+    "@ceramicnetwork/3id-did-resolver": "^1.4.16",
+    "@ceramicnetwork/http-client": "^1.5.7",
     "@ceramicstudio/idx": "^0.12.2",
-    "@ceramicnetwork/stream-caip10-link": "^1.2.2",
-    "dids": "^2.4.2",
-    "key-did-resolver": "^1.4.0",
+    "dids": "^2.4.3",
+    "key-did-resolver": "^1.4.4",
     "key-did-provider-ed25519": "^1.1.0",
-    "near-api-js": "^0.43.1"
+    "near-api-js": "^0.44.2",
+    "@apollo/client": "^3.4.17",
+    "graphql": "^15.7.2"
   },
   "devDependencies": {
-    "parcel": "^2.0.0-beta.2",
+    "parcel": "^2.4.0",
     "rimraf": "^3.0.2"
   },
   "scripts": {
