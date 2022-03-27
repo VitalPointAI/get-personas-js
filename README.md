@@ -1,13 +1,37 @@
-To use:
+![NEAR Personas}(https://cdn.vitalpoint.ai/vitalpointai-cdn/2022/03/personas-title.png)
 
-1.  Create a persona using NEAR Personas or Catalyst (details coming soon)
+## Integrating NEAR Personas in your App ##
 
-In your app:
+It's a simple process to bring NEAR Personas into your applications to use as you see fit.  It's basically a three step process:
 
-import Persona from '@aluhning/get-personas-js
+1. install this NPM package
+2. import the package and instantiate a Persona class
+3. call a method, passing it the name of the NEAR account you want data for
 
-const aPersona = new Persona()
-let currentPersona = aPersona.getPersona(accountId)
+### Step 1: Install the NPM Package ###
 
-where accountId is a NEAR account name.  You'll get an object of the Persona to use as you wish.  The data will change
-if the owner of the Persona ever changes it.
+    yarn add @aluhning/get-personas-js
+
+### Step 2: Import and Instantiate
+
+    import Persona from '@aluhning/get-personas-js'
+    ...
+    let persona = new Persona()
+
+### Step 3: Retrieve the Persona's Data
+
+Be sure to call this inside an async function (so await works):
+
+    let personaData = await persona.getData('profile', accountId)
+
+'profile' - is the alias of the Ceramic data stream definition storing the persona data.  Don't change this if you're wanting the data that people are managing using NEAR Personas.
+
+accountId - is the string representation of the NEAR account you want data for.
+
+### The Result ###
+
+personaData will contain an object similar to the following which you can use as you need to in your application.
+
+![NEAR Persona Data Object](https://cdn.vitalpoint.ai/vitalpointai-cdn/2022/03/persona-object.png)
+
+Enjoy.
