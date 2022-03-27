@@ -102,7 +102,8 @@ class Persona {
         let dao
         let did = false
 
-        did = queries.getDid(accountId)
+        did = await queries.getDid(accountId)
+        console.log('did check graph', did)
         if(did){
             return did
         }
@@ -110,12 +111,13 @@ class Persona {
         if(!near){
             near = await this.getNEAR()
         }
-        
+
         let factoryContract = await this.factoryContract(accountId, near)
         let registryContract = await this.registryContract(accountId, near)
 
         try{
         did = await registryContract.getDID({accountId: accountId})
+        console.log('did check registry', did)
         if(did){
             return did
         }
@@ -126,6 +128,7 @@ class Persona {
         if (!did){
         try {
         dao = await factoryContract.getDaoByAccount({accountId: accountId})
+        console.log('did check factory', did)
         did = dao.did
         } catch (err) {
             console.log('error retrieving did', err)
