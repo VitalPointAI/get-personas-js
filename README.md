@@ -8,6 +8,8 @@ It's a simple process to bring NEAR Personas into your applications to use as yo
 2. import the package and instantiate a Persona class
 3. call a method, passing it the name of the NEAR account you want data for
 
+    > The package uses an environment variable to determine whether testnet or mainnet contracts are used.  Ensure you have a .env that has a ENV=test or ENV=prod variable set. (test = testnet, prod = mainnet)
+
 ### Step 1: Install the NPM Package ###
 
     yarn add @aluhning/get-personas-js
