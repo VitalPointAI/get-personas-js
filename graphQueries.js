@@ -1,5 +1,5 @@
 import {ApolloClient, InMemoryCache, gql} from '@apollo/client';
-import { config } from '../state/config'
+import { config } from './config'
 
 const {
   GRAPH_FACTORY_API_URL,
