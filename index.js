@@ -102,10 +102,15 @@ class Persona {
         let dao
         let did = false
 
-        did = await queries.getDid(accountId)
-        console.log('did check graph', did)
-        if(did){
-            return did
+        try{
+            let queryData = await queries.getDid(accountId)
+            did = queryData.data.putDIDs.did
+            console.log('did check graph', did)
+            if(did){
+                return did
+            }
+        } catch (err) {
+            console.log('error retrieving did from graph', err)
         }
 
         if(!near){
@@ -165,8 +170,9 @@ class Persona {
             if(!idx){
                 idx = await this.getAppIdx(contract)
             }
-            let did = await this.getDID(accountId, idx)
+            let did = await this.getDID(accountId)
             let data = await idx.get(alias, did)
+            console.log('pkg data', data)
             if(data){
                 return data
             } else {
