@@ -1,6 +1,6 @@
 import CeramicClient from '@ceramicnetwork/http-client'
-import KeyDidResolver from 'key-did-resolver'
-import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
+import { getResolver as KeyDidResolver } from 'key-did-resolver'
+import { getResolver as ThreeIdResolver } from '@ceramicnetwork/3id-did-resolver'
 import { Ed25519Provider } from 'key-did-provider-ed25519'
 import { DID } from 'dids'
 import * as nearApiJs from 'near-api-js'
@@ -36,8 +36,8 @@ class Persona {
     async getAppCeramic() {
         const ceramic = new CeramicClient(CERAMIC_API_URL)
         const resolver = {
-            ...KeyDidResolver.getResolver(),
-            ...ThreeIdResolver.getResolver(ceramic),
+            ...KeyDidResolver(),
+            ...ThreeIdResolver(ceramic),
           }
         const did = new DID({ resolver })
         ceramic.setDID(did)
